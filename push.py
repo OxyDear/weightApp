@@ -63,7 +63,7 @@ class Ui_WindowPush(QMainWindow):
 
     def retranslateUi(self, WindowPush):
         _translate = QtCore.QCoreApplication.translate
-        WindowPush.setWindowTitle(_translate("WindowPush", "MainWindow"))
+        WindowPush.setWindowTitle(_translate("WindowPush", "PushApp"))
         self.res_q.setText(_translate("WindowPush", "What result?"))
         self.pushButton.setText(_translate("WindowPush", "PUSH"))
         # self.pushButton2.setText(_translate("WindowPush", "EXIT"))

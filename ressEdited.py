@@ -122,12 +122,16 @@ class Ui_MainResults(QMainWindow):
         self.deleteImp = QAction('Delete', self)
         self.imp.addAction(self.deleteImp)
 
-        # self.menuDelete = QtWidgets.QMenu(self.menubar)
-        # self.menuDelete.setObjectName("menuDelete")
+        self.menuImport = QtWidgets.QMenu(self.menubar)
+        self.menuImport.setObjectName("menuImport")
+        self.menuDelete = QtWidgets.QMenu(self.menubar)
+        self.menuDelete.setObjectName("menuDelete")
         MainResults.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainResults)
         self.statusbar.setObjectName("statusbar")
         MainResults.setStatusBar(self.statusbar)
+        self.menubar.addAction(self.menuImport.menuAction())
+        self.menubar.addAction(self.menuDelete.menuAction())
 
         self.retranslateUi(MainResults)
         QtCore.QMetaObject.connectSlotsByName(MainResults)

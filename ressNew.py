@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 
 # Form implementation generated from reading ui file 'ressNew.ui'
 #
@@ -14,9 +15,18 @@ from push import Ui_WindowPush
 from data import get_part_of_day
 from dataPush import push_to_data
 
+items = [[], [], []]
+
+try:
+    with open('data.json', 'r') as file:
+        src = json.loads(file.read())
+    items = [src['morning'], src['afternoon'], src['evening']]
+
+except FileNotFoundError:
+    pass
+
 
 class Ui_MainResults(QMainWindow):
-
     def open_sec_window(self):
         # print(1)
         self.sec_window = QMainWindow()
@@ -49,7 +59,6 @@ class Ui_MainResults(QMainWindow):
 
     def setupUi(self, MainResults):
         self.default = None
-        self.items = [[], [], []]
         MainResults.setObjectName("MainResults")
         MainResults.resize(350, 355)
         MainResults.setStyleSheet("background-color: rgb(222, 222, 222);")
@@ -165,6 +174,27 @@ class Ui_MainResults(QMainWindow):
         self.menubar.addAction(self.menuImport.menuAction())
         self.menubar.addAction(self.menuDelete.menuAction())
 
+        try:
+            for val in src['morning']:
+                ress = QtWidgets.QListWidgetItem(val)
+                ress.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                ress.setFont(font)
+                self.listWidget_mr.addItem(ress)
+
+            for val in src['afternoon']:
+                ress = QtWidgets.QListWidgetItem(val)
+                ress.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                ress.setFont(font)
+                self.listWidget_af.addItem(ress)
+
+            for val in src['evening']:
+                ress = QtWidgets.QListWidgetItem(val)
+                ress.setTextAlignment(QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter)
+                ress.setFont(font)
+                self.listWidget_ev.addItem(ress)
+        except NameError:
+            pass
+
         self.retranslateUi(MainResults)
         QtCore.QMetaObject.connectSlotsByName(MainResults)
 
@@ -173,6 +203,7 @@ class Ui_MainResults(QMainWindow):
         self.mr.triggered.connect(lambda: self.set_mr())
         self.af.triggered.connect(lambda: self.set_af())
         self.ev.triggered.connect(lambda: self.set_ev())
+        # app.aboutToQuit.connect(lambda: self.closeEvent)
 
     def retranslateUi(self, MainResults):
         _translate = QtCore.QCoreApplication.translate
@@ -201,23 +232,23 @@ class Ui_MainResults(QMainWindow):
         if self.default is None:
             if get_part_of_day() == 'morning':
                 self.listWidget_mr.addItem(res)
-                self.items[0].append(res)
+                items[0].append(self.res)
             elif get_part_of_day() == 'afternoon':
                 self.listWidget_af.addItem(res)
-                self.items[1].append(res)
+                items[1].append(self.res)
             elif get_part_of_day() == 'evening':
                 self.listWidget_ev.addItem(res)
-                self.items[2].append(res)
+                items[2].append(self.res)
         else:
             if self.default == 'morning':
                 self.listWidget_mr.addItem(res)
-                self.items[0].append(res)
+                items[0].append(self.res)
             elif self.default == 'afternoon':
                 self.listWidget_af.addItem(res)
-                self.items[1].append(res)
+                items[1].append(self.res)
             elif self.default == 'evening':
                 self.listWidget_ev.addItem(res)
-                self.items[2].append(res)
+                items[2].append(self.res)
 
             self.default = None
 
@@ -230,5 +261,7 @@ if __name__ == "__main__":
     ui = Ui_MainResults()
     ui.setupUi(MainResults)
     MainResults.show()
-    push_to_data(ui.items)
-    sys.exit(app.exec_())
+    if app.exec_() == 0:
+        push_to_data(items)
+        sys.exit()
+    # sys.exit(app.exec_())
